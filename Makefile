@@ -1,7 +1,7 @@
 #COS235 - HW4
 
 make:
-	@gcc grace-hw4.c -o hw4
+	@gcc -Wall grace-hw4.c -o hw4
 	@./hw4
 
 clean:
