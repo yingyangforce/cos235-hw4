@@ -17,34 +17,62 @@ int Stack[100];
 int *SP = Stack;            //Moving stack pointer
 const int *InitSP = Stack;  //Pointer to start of stack
 
-/* Fns --- */
-
-/*  REFERENCES: 
-    adr. of pointer -> &SP
-    adr. in stack being kept by SP -> SP
-
-*/
 
 int main() {
-    printf("prepush -> %d\n", Stack[0]);
-    printf("InitSP add -> %p\n", InitSP);
-    printf("Stackpointer stack position -> %p\n", SP);
+    int input; //for tracking input values
 
-    Push(&SP, 12);
+    printf("Stack Tracker v0.1\n\n");
+    printf("Please enter an option (or [-1] to quit): ");
+    scanf("%d", &input);
 
-    printf("post push -> %d\n", Stack[0]);
-    printf("InitSP add -> %p\n", InitSP);
-    printf("Stackpointer stack position -> %p\n", SP);
+    while (input != -1) {
+        switch (input) {
+            case 0: //push
+                printf("What value would you like to push to stack?: ");
+                scanf("%d", &input);
+                Push(&SP, input);
+                printf("%d pushed to stack.\n\n", input);
 
-    printf("last member should be -> %d\n", Pop(&SP));
-    printf("last member should be -> %d\n", Pop(&SP));
+                break;
+            case 1: //pop
+                printf("Popped of item: %d\n\n", Pop(&SP));
 
+                break;
+            case 2: //instack
+                printf("What value would you like to search for?: ");
+                scanf("%d", &input);
+                if (Instack(SP, input)) {
+                    printf("%d is in the stack.\n", input);
+                } else {
+                    printf("I couldn't find %d in the stack.\n", input);
+                }
+
+                break;
+            case 3: //sizeofstack
+                printf("Size of stack is %d.\n", SizeofStack(SP));
+                break;
+            case 4: //printstack
+                PrintStack(SP);
+
+                break;
+            case 5: //peek
+                Peek(SP);
+
+                break;
+            default:
+                printf("I don't understand that command. Please refer to documentation.\n");
+        }
+        printf("Please enter an option (or [-1] to quit): ");
+        scanf("%d", &input);
+    }
+
+    printf("Goodbye\n");
     return 0;
 }
 
 void Push(int **SP, int val) {
     if (SizeofStack(*SP) >=100) {
-        printf("ERROR: Overflow. No room left in the stack");
+        printf("ERROR: Overflow. No room left in the stack.\n");
         return;
     }
 
@@ -62,6 +90,35 @@ int Pop(int **SP) {
     return **SP; //return previous top of stack member
 }
 
+int Instack(int *SP, int val) {
+    int **tempSP = &SP;
+
+    while (SizeofStack(*tempSP) > 0) {
+        *tempSP = *tempSP - 1;
+        
+        if (val == **tempSP) return 1;
+    }
+
+    return 0;
+}
+
 int SizeofStack(int *SP) {
     return SP - InitSP;
+}
+
+void Peek(int *SP) { //Pop but moves pointer back
+    printf("Last item pushed to stack was %d.\n\n", Pop(&SP));
+    *SP = *SP + 1;
+}
+
+void PrintStack(int *SP) {
+    int **tempSP = &SP;
+    
+    printf("Your stack:\n\n");
+
+    while (SizeofStack(*tempSP) > 0) {
+        *tempSP = *tempSP - 1;
+        printf("Stack[%d] is %d\n", SizeofStack(*tempSP), **tempSP);
+    }
+    printf("\n");
 }
